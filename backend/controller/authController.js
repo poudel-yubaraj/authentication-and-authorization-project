@@ -1,6 +1,9 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const SALT_ROUND = 10;
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const signUp = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -32,7 +35,9 @@ const signUp = async (req, res) => {
     });
 
     await userData.save();
-    res.status(201).json({ success: true, message: "User registered successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "User registered successfully" });
   } catch (error) {
     console.error("Signup error", error);
     res.status(500).json({ message: "Internal server error" });
@@ -50,12 +55,22 @@ const logIn = async (req, res) => {
       return res.status(409).json({ message: "User do not exist" });
     }
     const registeredPassword = user.password;
-    const passwordCheck = await  bcrypt.compare(password, registeredPassword);
-    if(!passwordCheck){
-      return  res.status(400).json({message: "Password don't match"})
+    const passwordCheck = await bcrypt.compare(password, registeredPassword);
+    if (!passwordCheck) {
+      return res.status(400).json({ message: "Password don't match" });
     }
+
+    const jwtToken = jwt.sign({ username, _id:user._id, email:user.email }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1h",
+    });
+    console.log(process.env.JWT_SECRET_KEY);
+    res.status(200).json({
+      message: "Successfully logged in",
+      success: true,
+      jwt: jwtToken,
+      username,
+    });
     
-    res.status(200).json({ success:true, message: "Sucessfully logged in" });
   } catch (error) {
     console.error("login error");
     res.status(400).josn({ message: "Internal server error" });

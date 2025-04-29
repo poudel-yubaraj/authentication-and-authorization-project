@@ -25,11 +25,17 @@ const Login = () => {
         },
         body: JSON.stringify(formData),
       });
+
       const result = await response.json();
       console.log("the result is", result);
-      const { success, message, error } = result;
+      const { success, message, error , jwt , username} = result;
+      console.log(jwt);
+      console.log(username);
+
       if (success) {
         handleSuccess(message);
+        localStorage.setItem('token',jwt);
+        localStorage.setItem('loggedInUser',username);
         setTimeout(() => {
           navigate("/");
         }, 5000);
