@@ -37,7 +37,7 @@ const Login = () => {
         localStorage.setItem('token',jwt);
         localStorage.setItem('loggedInUser',username);
         setTimeout(() => {
-          navigate("/");
+          navigate("/user/profile");
         }, 5000);
       } else {
         handleError(error || message);

@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // to parse JSON body
 app.use('/user',require('./routes/userRoute'));
 app.use('/products',require('./routes/productRoute'))
+app.use('/admin',require('./routes/adminRoute'))
 
 app.listen(port,()=>{
   console.log(`server is listening on the port ${port}`)

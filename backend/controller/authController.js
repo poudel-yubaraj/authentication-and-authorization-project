@@ -60,7 +60,7 @@ const logIn = async (req, res) => {
       return res.status(400).json({ message: "Password don't match" });
     }
 
-    const jwtToken = jwt.sign({ username, _id:user._id, email:user.email }, process.env.JWT_SECRET_KEY, {
+    const jwtToken = jwt.sign({ username, _id:user._id, email:user.email,role: user.role }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
     console.log(process.env.JWT_SECRET_KEY);
@@ -73,7 +73,7 @@ const logIn = async (req, res) => {
     
   } catch (error) {
     console.error("login error");
-    res.status(400).josn({ message: "Internal server error" });
+    res.status(400).json({ message: "Internal server error" });
   }
 };
 
